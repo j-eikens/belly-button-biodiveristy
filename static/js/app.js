@@ -10,7 +10,7 @@ function DrawBargraph(sampleId)
     console.log(`DrawBargraph ${sampleId}`);
 
     d3.json(url).then(data => {
-        console.log(data)
+        // console.log(data)
 
         let samples = data.samples;
         let resultArray = samples.filter(s => s.id == sampleId);
@@ -50,11 +50,87 @@ function DrawBubblechart(sampleId)
 {
     console.log(`DrawBubblechart ${sampleId}`);
 
+    d3.json(url).then(data => {
+        // console.log('bubbledata:', data)
+
+        let samples = data.samples;
+        let resultArray = samples.filter(s => s.id == sampleId);
+        let result = resultArray[0];
+
+        let otu_ids = result.otu_ids;
+        let otu_labels = result.otu_labels;
+        let sample_values = result.sample_values;
+
+        // Create markersize scalar
+        let markerSize = sample_values
+
+        // Create trace object
+        var bubbleData = {
+            x: otu_ids,
+            y: sample_values,
+            text: otu_labels,
+            mode: 'markers',
+            marker: {
+                color: otu_ids,
+                size: markerSize
+            }
+
+        }
+
+        // Put trace object into array
+        var bubbleArray = [bubbleData]; 
+
+        // Create layout object
+        var layout = {
+            title: 'Bacteria Cultures Per Sample',
+            margin: {t: 30},
+            hovermode: "closest",
+            xaxis: {title: "OTU ID"}
+        };
+
+        // Call the Plotly function
+        Plotly.newPlot('bubble', bubbleArray, layout);
+
+
+
+
+    });
+
 }
 
 function ShowMetadata(sampleId)
 {
     console.log(`ShowMetadata ${sampleId}`);
+
+    let tableSelect = d3.select('#sample-metadata');
+
+    d3.json(url).then(data => {
+        // console.log('data:', data)
+
+        let metadata = data.metadata;
+        let resultArray = metadata.filter(s => s.id == sampleId);
+        let result = resultArray[0];
+
+        let id = result.id;
+        let ethnicity = result.ethnicity;
+        let gender = result.gender;
+        let age = result.age;
+        let location = result.location;
+        let bbtype = result.bbtype;
+        let wfreq = result.wfreq;
+
+        tableSelect.html(
+
+            `id: ${id} <br>
+            ethnicity: ${ethnicity} <br>
+            gender: ${gender} <br>
+            age: ${age} <br>
+            location: ${location} <br>
+            bbtype: ${bbtype} <br>
+            wfreq: ${wfreq}`
+        )
+
+    });
 
 }
 
@@ -79,7 +155,7 @@ function InitDashboard()
 
     d3.json(url).then(data => {
         // This is what I want to run with my data
-        console.log(data);
+        // console.log(data);
 
         let sampleNames = data.names;
         console.log(sampleNames);
@@ -87,12 +163,12 @@ function InitDashboard()
         // Populate the dropdown box
         for (let i = 0; i < sampleNames.length; i++) {
             let sampleId = sampleNames[i];
-            console.log(`sampleID = ${sampleId}`);
+            // console.log(`sampleID = ${sampleId}`);
             selector.append("option").text(sampleId).property("value", sampleId);
 
         // Read the current value from the dropdown
         let initialId = selector.property("value");
-        console.log("initialID:", initialId)
+        // console.log("initialID:", initialId)
 
         // Draw bar graph for selected sample ID
         DrawBargraph(initialId);
