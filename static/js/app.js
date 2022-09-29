@@ -36,7 +36,6 @@ function DrawBargraph(sampleId)
         // create the layout object
         let barLayout = {
             title: "Top 10 Bacteria Cultures Found",
-            // margin: (t: 30, l: 150)
         };
 
         // call the Plotly function
@@ -51,7 +50,6 @@ function DrawBubblechart(sampleId)
     console.log(`DrawBubblechart ${sampleId}`);
 
     d3.json(url).then(data => {
-        // console.log('bubbledata:', data)
 
         let samples = data.samples;
         let resultArray = samples.filter(s => s.id == sampleId);
@@ -74,7 +72,6 @@ function DrawBubblechart(sampleId)
                 color: otu_ids,
                 size: markerSize
             }
-
         }
 
         // Put trace object into array
@@ -90,10 +87,6 @@ function DrawBubblechart(sampleId)
 
         // Call the Plotly function
         Plotly.newPlot('bubble', bubbleArray, layout);
-
-
-
-
     });
 
 }
@@ -105,7 +98,6 @@ function ShowMetadata(sampleId)
     let tableSelect = d3.select('#sample-metadata');
 
     d3.json(url).then(data => {
-        // console.log('data:', data)
 
         let metadata = data.metadata;
         let resultArray = metadata.filter(s => s.id == sampleId);
@@ -139,7 +131,6 @@ function gauge(sampleId)
     console.log(`gauge: ${sampleId}`);
 
     d3.json(url).then(data => {
-        // console.log('data:', data)
 
         let metadata = data.metadata;
         let resultArray = metadata.filter(s => s.id == sampleId);
@@ -152,58 +143,29 @@ function gauge(sampleId)
             {
               type: "indicator",
               value: wfreq,
-            //   delta: { reference: 160 },
-              gauge: { axis: { visible: false, range: [0, 250] } },
+              gauge: { axis: { visible: false, range: [0, 9] } },
               domain: { row: 0, column: 0 }
             },
-            // {
-            //   type: "indicator",
-            //   value: 120,
-            //   gauge: {
-            //     shape: "bullet",
-            //     axis: {
-            //       visible: false,
-            //       range: [-200, 200]
-            //     }
-            //   },
-            //   domain: { x: [0.1, 0.5], y: [0.15, 0.35] }
-            // },
-            // {
-            //   type: "indicator",
-            //   mode: "number+delta",
-            //   value: 300,
-            //   domain: { row: 0, column: 1 }
-            // },
-            // { type: "indicator", mode: "delta", value: 40, domain: { row: 1, column: 1 } }
+
           ];
           
           var layout = {
             width: 600,
             height: 400,
-            // margin: { t: 25, b: 25, l: 25, r: 25 },
-            // margin: {t: 30},
-            // grid: { rows: 2, columns: 2, pattern: "independent" },
             template: {
               data: {
                 indicator: [
                   {
                     title: { text: "Washing Frequency" },
                     mode: "number+delta+gauge",
-                    // delta: { reference: 90 }
                   }
                 ]
               }
             }
           };
-          
+
           Plotly.newPlot('gauge', data, layout);
-
     });
-
-
-
-
-
 }
 
 function optionChanged(sampleId)
@@ -224,11 +186,7 @@ function InitDashboard()
     // Get a handle to the dropdown
     let selector = d3.select("#selDataset");
 
-    
-
     d3.json(url).then(data => {
-        // This is what I want to run with my data
-        // console.log(data);
 
         let sampleNames = data.names;
         console.log(sampleNames);
@@ -236,7 +194,6 @@ function InitDashboard()
         // Populate the dropdown box
         for (let i = 0; i < sampleNames.length; i++) {
             let sampleId = sampleNames[i];
-            // console.log(`sampleID = ${sampleId}`);
             selector.append("option").text(sampleId).property("value", sampleId);
 
         // Read the current value from the dropdown
@@ -256,10 +213,7 @@ function InitDashboard()
         gauge(initialId);
 
         };
-
-
     })
-
 }
 
 InitDashboard();
